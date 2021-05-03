@@ -1,0 +1,69 @@
+#clear the console
+cat("%f")
+#THE SPARKS FOUNDATION || GRIP_MAY 21
+#DATA SCIENCE AND BUSINESS ANALYTICS INTERNSHIP
+#TASK-1 PREDICTION USING SUPERVISED ML
+#DATE-02/05/21
+#AUTHOR : CLINTAN CYRIL A
+#
+#To predict the percentage of marks of students based on the
+#number of hours they studed & fid the predicted score if a student
+#studies for 9.25 hours/day
+
+# Steps involved
+
+# Reading the Dataset
+# Visualizing the given data
+# Splitting the data into train and test splits
+# create the supervised ML model using "lm" function 
+# Finding coefficient, intercept values to get the line equation
+# Drawing a Regression line for the data
+# Analysing how better the data is predicted
+# Evaluate the model
+
+#import the dataset
+sr<-read.csv("task.csv")
+
+#convert the csv file format into dataframe
+sr<-as.data.frame(sr)
+
+#view the dataset
+head(sr)
+#structure of the dataset
+str(sr)
+#summary of the dataset
+summary(sr)
+#checking the missing values
+print(any(is.na(sr)))
+#correlation among the dataset
+cor(sr)
+#visualizing the given dataset using ggplot2
+library(ggplot2)
+ggplot(sr,aes(x=Hours,y=scores,col='yellow'))+geom_point()
+#Drawing a regression line for a data
+ggplot(sr,aes(x=Hours,y=scores))+geom_point(aes(col="#C42126"))+geom_smooth(method='lm',formula=y~x)
+
+#splitting the data into train and test splits
+pd=sample(2,nrow(sr),replace = TRUE,prob = c(0.7,0.3))
+pd=as.data.frame(pd)
+train=sr[pd==1,]
+test=sr[pd==2,]
+
+#splitting the data into dependent and independent variables
+y=c(train$scores)
+x=c(train$Hours)
+#create a supervised ml model using lm function
+mod=lm(y~x)
+#print the model
+print(mod)
+
+#analyzing how better the data is predicted
+res=predict(mod,test)
+print(res)
+#Task given what will be the predicted score if a student 
+#studies for 9.25 hours/day
+k=data.frame(x=9.25)
+r=predict(mod,k)
+print(r)
+#evaluate the model using root means square error method
+sqrt(mean(mod$residuals^2))
